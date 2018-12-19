@@ -1,7 +1,7 @@
 {
   "name": "martian-insights",
   "version": "1.0.0",
-  "description": "Insight Rover Image gallery",
+  "description": "Insight Lander Image gallery",
   "author": "S4URABH <30949385+S4URABH@users.noreply.github.com>",
   "private": true,
   "scripts": {

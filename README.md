@@ -1,6 +1,6 @@
-# martian-insights
+# Martian InSights
 
-> Insight Rover Image gallery
+> Insight Lander Image gallery
 
 ## Build Setup
 
