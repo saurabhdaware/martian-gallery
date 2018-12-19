@@ -1,6 +1,9 @@
 # Martian InSights
 
-> Insight Lander Image gallery
+> Martian Rovers Image Gallery
+Insight to Images from currently active Martian rover Curiosity and lander InSight.
+
+
 
 ## Build Setup
 
