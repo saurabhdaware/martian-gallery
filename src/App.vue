@@ -3,8 +3,7 @@
     <Navbar/>
     <router-view/>
     <div class="footer">
-      Made with <span class="fa fa-heart"></span> using <img src="./assets/logo.png" height=20> by 
-      <a target="_blank" href="https://saurabhdaware.in"><img src="https://res.cloudinary.com/saurabhdaware/image/upload/v1531064301/saurabhdaware.in/logo.png" height="20"></a>
+      Made with <span class="fa fa-heart"></span> using <img src="./assets/logo.png" height=20> at 3:00 AM
       <a target="_blank" href="https://saurabhdaware.in" style="float:right"><span class="fa fa-copyright"></span> {{new Date().getFullYear()}} Saurabh Daware</a>
     </div>
   </div>
