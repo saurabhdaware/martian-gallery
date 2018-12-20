@@ -211,17 +211,28 @@ a {
   padding:10px;
 }
 @media (max-width:768px){
+  .gallery-container{
+    padding:25px;
+  }
   .play-button{
     font-size:12pt;
     left:45%;
   }
   .video{
     height:auto;
-    width:300px;
+    width:100%;
+  }
+  .video-container{
+    width:90%;
+  }
+  .image-container{
+    width:100%;
+    padding:20px 15px;
+    text-align:center;
   }
   .picture{
     height:auto;
-    width:300px;
+    width:100%;
   }
 }
 </style>

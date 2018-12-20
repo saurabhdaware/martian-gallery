@@ -4,7 +4,7 @@
     <router-view/>
     <div class="footer">
       Made with <span class="fa fa-heart"></span> using <img src="./assets/logo.png" height=20> at 3:00 AM
-      <a target="_blank" href="https://saurabhdaware.in" style="float:right"><span class="fa fa-copyright"></span> {{new Date().getFullYear()}} Saurabh Daware</a>
+      <a class="hide-mobile" target="_blank" href="https://saurabhdaware.in" style="float:right"><span class="fa fa-copyright"></span> {{new Date().getFullYear()}} Saurabh Daware</a>
     </div>
   </div>
 </template>
@@ -51,5 +51,10 @@ a{text-decoration:none;}
   padding:20px;
   font-size:11pt;
   font-weight:bold;
+}
+@media (max-width:768px) {
+  .hide-mobile{
+    display:none;
+  }
 }
 </style>
