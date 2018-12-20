@@ -37,13 +37,13 @@
         <div class="video-container" v-show="vid.length > 1" v-if="vid.length >= 1" v-for="(vid,index) in groups" :key="index">
           <div class="overlay" ref="overlay"></div>
           <span ref="play" style="cursor:pointer;" class="play-button" v-on:click="playVideo(vid,index)">&nbsp; <span class="fa fa-play"></span>&nbsp; </span>
-          <img ref="video" class="video" :src="images[Number(vid[0])].img_src">
+          <img ref="video" class="video" :src="images[Number(vid[0])].img_src.replace('http://','https://')">
         </div>
         <!-- <button class="w3-btn" style="background-color:#ddd;color:#333" v-on:click="()=>{imageLoader();endUpdated = false;}" v-if="endUpdated">Load More Videos</button> -->
         <br><br>
         <h3>Images</h3>
         <div class="image-container" v-for="(image,index) in (images.length<=30)?images:images.slice(0,end)" :key="index+'-'+end">
-          <a target="_blank" :href="image.img_src"><img class="picture" ref="pictures" :data-key="index" :src="image.img_src"></a>
+          <a target="_blank" :href="image.img_src.replace('http://','https://')"><img class="picture" ref="pictures" :data-key="index" :src="image.img_src.replace('http://','https://')"></a>
         </div>  
         <br><button style="background-color:#ddd;color:#333" v-if="images.length > 30 && end <= images.length" v-on:click="()=>{end=end+30;endUpdated = true;getInSightData()}" class="w3-btn">Load More</button>
       </div>
@@ -74,7 +74,8 @@ export default {
       imageDimenstions:[],
       groups:[],
       end:30,
-      endUpdated:false
+      endUpdated:false,
+      skipWaitingForVideo:false
     }
   },
   methods:{
@@ -113,7 +114,7 @@ export default {
       this.$refs.play[index].style.display = 'none';
       let frame = 0;
       let vidInterval = setInterval(()=>{
-        this.$refs.video[index].src = this.images[Number(arr[frame])].img_src;
+        this.$refs.video[index].src = this.images[Number(arr[frame])].img_src.replace('http://','https://');
         frame++;
         if(frame == arr.length){ 
           clearInterval(vidInterval);
@@ -128,9 +129,9 @@ export default {
       for(let image of this.$refs.pictures){
         image.onload = null;
       }
-      this.$refs.pictures.slice(this.end-30,this.end).forEach(image=>(image.width !== 0)?count++:image.onload = function(){
+      this.$refs.pictures.slice(this.end-30,this.end).forEach(image=>image.onload = function(){
         count++;
-        if(count == vue.images.length || count == vue.end){
+        if(count == vue.images.length || count == vue.end ){
           vue.createVideo();
         }
       })
@@ -138,6 +139,7 @@ export default {
   },
   mounted() {
     this.getInSightData();
+    setTimeout(()=>this.skipWaitingForVideo = true,20000)
   }
 }
 </script>
