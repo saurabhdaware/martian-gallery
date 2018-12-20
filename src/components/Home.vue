@@ -11,31 +11,41 @@
     <div id="search" class="gallery-container">
       {{msg}}<br><br>
       <div class="w3-row search-container">
-        <div class="w3-third">Sol <input class="w3-input sol-input" type="number" placeholder="sol" ref="sol"></div>
+        <div class="w3-third">Sol <small style="color:#555;">(Martian days since the landing min:0 max:{{(images[0])?images[0].rover.max_sol:'3000'}})</small> <input class="w3-input sol-input" type="number" placeholder="sol" ref="sol"></div>
         <div class="w3-third">
           Camera
           <select class="w3-input camera-input" name="camera" id="cam" ref="camera">
-            <option value="RHAZ">RHAZ</option>
-            <option value="FHAZ">FHAZ</option>
-            <option value="NAVCAM">NAVCAM</option>
+            <option value="RHAZ">RHAZ - Rear Hazard</option>
+            <option value="FHAZ">FHAZ - Front Hazard</option>
+            <option value="NAVCAM">NAVCAM - Navigation</option>
+            <option value="MAST">MAST - Terrain Images</option>
           </select>
         </div>
         <div class="w3-third"><br><button class="fetchdata-button w3-btn" v-on:click="getInSightData">Fetch Data</button></div>
       </div>
       
       <div class="gallery">
-      <br>{{error}}
-      <div v-show="vid.length != 1" v-if="vid.length >= 1" v-for="(vid,index) in groups" :key="index">
-        <button v-on:click="playVideo(vid,index)">Play {{vid}} {{index}}</button><br><img ref="video" :src="images[Number(vid[0])].img_src" height=300>
-      </div>
-      <table>
-        <tr class="image" v-for="(image,index) in images" :key="index">
-          <td>
-            <img class="picture" ref="pictures" :data-key="index" :src="image.img_src">        
-          </td>
-          <td>Sol: {{image.sol}} || Earth Date: {{image.earth_date}}<br> Rover: {{image.rover.name}} || Rover Max Sol : {{image.rover.max_sol}} </td>
-        </tr>
-      </table>
+        <br>{{error}}<br>
+        <div class="info" v-if="images[0]">
+          Sol: {{images[0].sol}}<br>
+          Earth Date: {{images[0].earth_date.split('-').reverse().join('-')}}<br>
+          Camera: {{images[0].camera.name}} ({{images[0].camera.full_name}})<br>
+          Rover: {{images[0].rover.name}}
+        </div>
+        <br>
+        <div v-if="!groups[0] && !error">Loading Video ....</div>
+        <div class="video-container" v-show="vid.length > 1" v-if="vid.length >= 1" v-for="(vid,index) in groups" :key="index">
+          <div class="overlay" ref="overlay"></div>
+          <span ref="play" style="cursor:pointer;" class="play-button" v-on:click="playVideo(vid,index)">&nbsp; <span class="fa fa-play"></span>&nbsp; </span>
+          <img ref="video" class="video" :src="images[Number(vid[0])].img_src">
+        </div>
+        <!-- <button class="w3-btn" style="background-color:#ddd;color:#333" v-on:click="()=>{imageLoader();endUpdated = false;}" v-if="endUpdated">Load More Videos</button> -->
+        <br><br>
+        <h3>Images</h3>
+        <div class="image-container" v-for="(image,index) in (images.length<=30)?images:images.slice(0,end)" :key="index+'-'+end">
+          <a target="_blank" :href="image.img_src"><img class="picture" ref="pictures" :data-key="index" :src="image.img_src"></a>
+        </div>  
+        <br><button style="background-color:#ddd;color:#333" v-if="images.length > 30 && end <= images.length" v-on:click="()=>{end=end+30;endUpdated = true;getInSightData()}" class="w3-btn">Load More</button>
       </div>
     </div>
   </div>
@@ -62,7 +72,9 @@ export default {
       i:0,
       videoInterval:null,
       imageDimenstions:[],
-      groups:[]
+      groups:[],
+      end:30,
+      endUpdated:false
     }
   },
   methods:{
@@ -85,6 +97,8 @@ export default {
       .then(this.imageLoader);
     },
     createVideo:function(){
+      this.imageDimenstions = [];
+      this.groups = [];
       this.imageDimenstions = this.$refs.pictures.map(image=>image.clientHeight + 'x' + image.clientWidth);
       let uniqueDimensions = [...new Set(this.imageDimenstions)];
       for(let dimension of uniqueDimensions){
@@ -94,23 +108,32 @@ export default {
     },
     playVideo:function(arr,index){
       console.log(arr);
-      console.log(this.$refs.video);
+      console.log(this.$refs);
+      this.$refs.overlay[index].style.display = 'none';
+      this.$refs.play[index].style.display = 'none';
       let frame = 0;
       let vidInterval = setInterval(()=>{
         this.$refs.video[index].src = this.images[Number(arr[frame])].img_src;
         frame++;
-        if(frame == arr.length) clearInterval(vidInterval);
+        if(frame == arr.length){ 
+          clearInterval(vidInterval);
+          this.$refs.overlay[index].style.display = 'block';
+          this.$refs.play[index].style.display = 'inline-block';
+        };
       },700);
     },
     imageLoader:function(){
       let count = 0;
       let vue = this;
-      document.querySelectorAll('.picture').forEach(image=>image.addEventListener('load',function(){
-        count++
-        if(count == vue.images.length){
+      for(let image of this.$refs.pictures){
+        image.onload = null;
+      }
+      this.$refs.pictures.slice(this.end-30,this.end).forEach(image=>(image.width !== 0)?count++:image.onload = function(){
+        count++;
+        if(count == vue.images.length || count == vue.end){
           vue.createVideo();
         }
-      }))
+      })
     }
   },
   mounted() {
@@ -122,7 +145,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .picture{
-  height:200px;
+  height:300px;
 }
 a {
   color: #42b983;
@@ -156,5 +179,49 @@ a {
 }
 .fetchdata-button:hover{
   color:#000;
+}
+.play-button{
+  position:absolute;
+  top:40%;
+  left:40%;
+  font-size:18pt;
+  padding:10px;
+  border-radius:50%;
+  background-color:#111;
+}
+.video-container{
+  position:relative;
+  display:inline-block;
+  margin:10px;
+}
+.overlay{
+  position:absolute;
+  left:0;top:0;
+  height:100%;
+  width:100%;
+  background-color: #222;
+  opacity:.5;
+}
+.video{
+  height:300px;
+  width:auto;
+}
+.image-container{
+  display:inline-block;
+  padding:10px;
+}
+@media (max-width:768px){
+  .play-button{
+    font-size:12pt;
+    left:45%;
+  }
+  .video{
+    height:auto;
+    width:300px;
+  }
+  .picture{
+    height:auto;
+    width:300px;
+  }
 }
 </style>

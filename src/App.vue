@@ -2,6 +2,11 @@
   <div id="app">
     <Navbar/>
     <router-view/>
+    <div class="footer">
+      Made with <span class="fa fa-heart"></span> using <img src="./assets/logo.png" height=20> by 
+      <a target="_blank" href="https://saurabhdaware.in"><img src="https://res.cloudinary.com/saurabhdaware/image/upload/v1531064301/saurabhdaware.in/logo.png" height="20"></a>
+      <a target="_blank" href="https://saurabhdaware.in" style="float:right"><span class="fa fa-copyright"></span> {{new Date().getFullYear()}} Saurabh Daware</a>
+    </div>
   </div>
 </template>
 
@@ -27,5 +32,25 @@ a{text-decoration:none;}
   font-family: 'Electrolize', sans-serif;
   color: #fff;
   width:100%;
+}
+::-webkit-scrollbar{
+  width:2px;
+  height:2px;
+}
+::-webkit-scrollbar-track{
+  width:2px;
+  height:2px;
+}
+
+::-webkit-scrollbar-thumb{
+  background: #777;
+}
+.footer{
+  text-align: left;
+  background-color: #000;
+  color:#777;
+  padding:20px;
+  font-size:11pt;
+  font-weight:bold;
 }
 </style>
