@@ -55,4 +55,4 @@ This project is under [MIT](LICENSE) license so you can do whatever you want jus
 
 
 
-2018 - Present © Saurabh Daware
+Copyright © 2018 - Present Saurabh Daware
