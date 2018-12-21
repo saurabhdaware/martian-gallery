@@ -51,7 +51,7 @@ npm run build --report
 
 
 ## LICENSE
-This project is under [MIT](LICENSE.md) license so you can do whatever you want just give credits :)
+This project is under [MIT](LICENSE) license so you can do whatever you want just give credits :)
 
 
 
