@@ -5,7 +5,7 @@
         This projects fetches Images from NASA API and creates a video out of similar images, You can see the source code by clicking on the octocat from top right corner :D <br>
         <a class="search-images-button w3-btn w3-card-4" href="#search"><span class="fa fa-search"></span> Search Images</a>
       </span> 
-      <span class="w3-display-bottomright w3-padding" style="" v-if="images[0]">Sol {{images[0].rover.max_sol}} <img width=20 src="../assets/logo.png"></span>
+      <span class="w3-display-bottomright w3-padding" style="">Sol {{((new Date().getTime()/1000) - (new Date('8/6/2012').getTime()/1000))/((60*60*24)+((39*60)+35.244))}} <img width=20 src="../assets/logo.png"></span>
     </div>
     
     <div id="search" class="gallery-container">
